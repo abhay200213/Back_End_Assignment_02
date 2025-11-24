@@ -6,7 +6,9 @@ import {
   handleGetEmployeeById,
   handleCreateEmployee,
   handleUpdateEmployee,
-  handleDeleteEmployee
+  handleDeleteEmployee,
+  handleGetEmployeesByBranch,
+  handleGetEmployeesByDepartment
 } from '../controllers/employeeController';
 
 export const employeeRouter = Router();
@@ -16,6 +18,10 @@ employeeRouter.post('/', handleCreateEmployee);
 
 // Get All Employees
 employeeRouter.get('/', handleGetAllEmployees);
+
+// Logical operations
+employeeRouter.get('/by-branch', handleGetEmployeesByBranch);
+employeeRouter.get('/by-department', handleGetEmployeesByDepartment);
 
 // Get Employee by ID
 employeeRouter.get('/:id', handleGetEmployeeById);

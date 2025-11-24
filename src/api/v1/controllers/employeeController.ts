@@ -7,8 +7,13 @@ import {
   createEmployee,
   updateEmployee,
   deleteEmployee,
+  getEmployeesByBranchId,
+  getEmployeesByDepartment,
   NewEmployee
 } from '../services/employeeService';
+
+// handleGetAllEmployees, handleGetEmployeeById,
+// handleCreateEmployee, handleUpdateEmployee, handleDeleteEmployee
 
 export function handleGetAllEmployees(req: Request, res: Response): void {
   const employees = getAllEmployees();
@@ -63,7 +68,6 @@ export function handleUpdateEmployee(req: Request, res: Response): void {
 
   const updates = req.body as Partial<NewEmployee>;
 
-  // For the "missing required parameters" test: require at least one field in body
   if (Object.keys(updates).length === 0) {
     res.status(400).json({ message: 'No fields provided for update' });
     return;
@@ -95,4 +99,35 @@ export function handleDeleteEmployee(req: Request, res: Response): void {
   }
 
   res.status(200).json({ message: 'Employee deleted successfully' });
+}
+
+export function handleGetEmployeesByBranch(req: Request, res: Response): void {
+  const { branchId } = req.query;
+
+  if (!branchId) {
+    res.status(400).json({ message: 'branchId query parameter is required' });
+    return;
+  }
+
+  const id = Number(branchId);
+
+  if (Number.isNaN(id)) {
+    res.status(400).json({ message: 'branchId must be a number' });
+    return;
+  }
+
+  const result = getEmployeesByBranchId(id);
+  res.status(200).json(result);
+}
+
+export function handleGetEmployeesByDepartment(req: Request, res: Response): void {
+  const { department } = req.query;
+
+  if (!department || typeof department !== 'string') {
+    res.status(400).json({ message: 'department query parameter is required' });
+    return;
+  }
+
+  const result = getEmployeesByDepartment(department);
+  res.status(200).json(result);
 }

@@ -123,4 +123,50 @@ describe('Employee Routes', () => {
       expect(res.body).toHaveProperty('message');
     });
   });
+    describe('GET /api/v1/employees/by-branch', () => {
+    it('should return all employees for a given branchId', async () => {
+      // branchId 1 exists in sample data
+      const res = await request(app).get('/api/v1/employees/by-branch').query({ branchId: 1 });
+
+      expect(res.status).toBe(200);
+      expect(Array.isArray(res.body)).toBe(true);
+      expect(res.body.length).toBeGreaterThan(0);
+
+      // all returned employees should have branchId 1
+      res.body.forEach((emp: any) => {
+        expect(emp.branchId).toBe(1);
+      });
+    });
+
+    it('should return 400 when branchId query parameter is missing', async () => {
+      const res = await request(app).get('/api/v1/employees/by-branch');
+
+      expect(res.status).toBe(400);
+      expect(res.body).toHaveProperty('message');
+    });
+  });
+
+  describe('GET /api/v1/employees/by-department', () => {
+    it('should return all employees for a given department', async () => {
+      // "IT" exists in sample data
+      const res = await request(app)
+        .get('/api/v1/employees/by-department')
+        .query({ department: 'IT' });
+
+      expect(res.status).toBe(200);
+      expect(Array.isArray(res.body)).toBe(true);
+      expect(res.body.length).toBeGreaterThan(0);
+
+      res.body.forEach((emp: any) => {
+        expect(emp.department).toBe('IT');
+      });
+    });
+
+    it('should return 400 when department query parameter is missing', async () => {
+      const res = await request(app).get('/api/v1/employees/by-department');
+
+      expect(res.status).toBe(400);
+      expect(res.body).toHaveProperty('message');
+    });
+  });
 });
