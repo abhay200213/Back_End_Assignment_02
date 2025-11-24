@@ -1,16 +1,18 @@
 import express, { Request, Response } from 'express';
 import morgan from 'morgan';
+import { employeeRouter } from './api/v1/routes/employeeRoutes';
 
 const app = express();
 
 app.use(express.json());
-
-// HTTP request logging with Morgan
 app.use(morgan('combined'));
 
-// Basic health check endpoint
+// Health check
 app.get('/health', (req: Request, res: Response) => {
   res.status(200).send('Server is healthy');
 });
+
+// Employee API
+app.use('/api/v1/employees', employeeRouter);
 
 export default app;
